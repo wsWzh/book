@@ -1,0 +1,51 @@
+{
+  "id": "3128290",
+  "name": "icons",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1575975",
+      "name": "上一章-01",
+      "font_class": "shangyizhang-",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "90883",
+      "name": "下一章",
+      "font_class": "xiayizhang",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "90884",
+      "name": "上一章",
+      "font_class": "shangyizhang",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "1575976",
+      "name": "下一章-01",
+      "font_class": "xiayizhang-",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "4564794",
+      "name": "sm-上一章",
+      "font_class": "chapter-prev",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "4564805",
+      "name": "sm-下一章",
+      "font_class": "chapter-next",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    }
+  ]
+}
