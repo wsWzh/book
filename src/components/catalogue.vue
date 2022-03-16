@@ -4,40 +4,85 @@
     <div class="title f-cb">
       <a class="mid">目录</a>
 
-      <router-link tag="p" to="/" class="left"
+      <router-link tag="p" to="/source" class="left"
         ><span class="ui-leftaw-2"></span
       ></router-link>
 
       <a class="right" href="/">首页</a>
     </div>
 
-    <div class="m-catalist-big" style="overflow: hidden">
-      <div class="curbiglist">
-        <span class="j-txt">1-100章</span>
-        <i class="icon-down"></i>
-      </div>
-      <!-- 隐藏或者显示 -->
-      <div class="list wraper">
-        
-        <ul class="f-cb">
-            <h1 style="color:#000">44555</h1>
-          <li class="j-group crt">1-100</li>
-          <li class="j-group" data-group="2">101-200</li>
-          <li class="j-group last" data-group="3">201-88888300</li>
-          <li class="j-group" data-group="4">301-400</li>
-          <li class="j-group" data-group="5">401-481</li>
-        </ul>
-      </div>
+    <div class="zj">
+      <ul>
+        <li
+          class="grade_02"
+          v-for="(item, index) in catalog"
+          :key="index"
+          @click="add(item.uuid)"
+        >
+          <div >{{ item.title }}<i></i></div>
+          <van-divider />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
+<script>
+import { getCatalog } from "../api/base";
+
+export default {
+  data() {
+    return {
+      show: false,
+      catalog: [],
+    };
+  },
+  methods: {
+    get() {
+      getCatalog({ source_uuid: this.sourceUuid }).then((data) => {
+        this.catalog = data.data.catalog; //章节列表
+        console.log(this.catalog);
+      });
+    },
+  },
+  created() {
+    this.get();
+  },
+};
+</script>
 <style lang="less">
+.zj {
+  margin-top: 2rem;
+  li {
+    text-indent: 2em;
+    padding-left: 1rem;
+    
+  }
+}
+.zjnr {
+  margin-top: 1rem;
+  text-align: center;
+}
+.zj {
+  position: relative;
+}
+.xs1 {
+  position: absolute;
+  top: 21.8px;
+  background-color: #998d80;
+  width: 100%;
+  height: 200px;
+}
+.xs2 {
+  position: absolute;
+  top: 1px;
+  text-align: center;
+}
 .f-cb,
 .f-cbli li {
   &::after {
     display: block;
     clear: both;
-    visibility: hidden;
+    // visibility: hidden;
     height: 0;
     overflow: hidden;
     content: ".";

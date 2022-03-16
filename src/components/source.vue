@@ -39,12 +39,20 @@
       </div>
       <div class="j-actions">
         <div class="btns">
-          <a class="ui-blue two j-log" @click="bookid">立即阅读</a>
+          <a class="ui-blue two j-log" @click="bookid()">立即阅读</a>
           <a id="J_Offline" class="ui-blue-light two J_openClinet j-log"
             >加入书架</a
           >
         </div>
       </div>
+      <!-- <div class="j-actions">
+        <div class="btns" v-show="!show2">
+          <a class="ui-blue two j-log" @click="bookid(1)">继续阅读</a>
+          <a id="J_Offline" class="ui-blue-light two J_openClinet j-log"
+            >加入书架</a
+          >
+        </div>
+      </div> -->
     </div>
     <!-- 章节更新 -->
     <div class="m-book-recent">
@@ -72,38 +80,73 @@
           <li class="grade_01">
             <div><i></i></div>
           </li>
-          <li 
+          <li
             class="grade_02"
-            v-for="(item, index) in catalog"
+            v-for="(item, index) in Arr"
             :key="index"
-            @click="add(item.uuid)"
+            @click="add(item.uuid, index)"
           >
             <div>{{ item.title }}<i></i></div>
           </li>
         </ul>
         <ul v-if="showaad">
-              <li
+          <li
             class="grade_02"
             v-for="(item, index) in newArr"
             :key="index"
-            @click="add(item.uuid)"
+            @click="add(item.uuid, index)"
           >
             <div>{{ item.title }}<i></i></div>
           </li>
         </ul>
-        <router-link tag="div" to="/catalogue" class="more">
+        <router-link
+          tag="div"
+          :to="{ path: '/catalogue', query: { id: sourceUuid } }"
+          class="more"
+        >
           <span>更多目录</span>
           <i></i>
         </router-link>
+        <van-divider />
+        <h4>
+          精彩评论<span>({{ plnum }})</span>
+        </h4>
+        <div class="pl" v-for="(item, index) in plnr" :key="index">
+          <div class="img1" style="border-radius: 50%">
+            <img
+              width="34"
+              src="	https://yuedust.yuedu.126.net/assets/mobile/images/tx-default.png"
+              alt=""
+            />
+          </div>
+          <div class="jt">
+            <div>{{ item.nickName }}</div>
+            <!-- 评分 -->
+            <!-- <div><van-rate size="10px" v-model="item.userLevel" /></div> -->
+            <div>{{ item.comment }}</div>
+            <van-divider />
+          </div>
+        </div>
       </div>
+      <!-- 精彩评论 -->
+
+      <!-- <div class="m-book-directory">
+        <h4 class="m-book-title">
+          精彩评论<span class="j-cata-length">(共{{ catalog.length }}章)</span
+          ><a class="sort j-squece" @click="daoxu">倒序<i></i></a>
+        </h4>
+      </div> -->
     </dir>
   </div>
 </template>
 <script>
 import { getSub, getSimpleInfo, getCatalog } from "../api/base";
+import { get } from "../api/https";
 export default {
   data() {
     return {
+      show2: window.localStorage.getItem("uuid"),
+      value: 5,
       show: false,
       sourceUuid: "", //书籍id
       source: null, //内容
@@ -120,50 +163,60 @@ export default {
       simpleInfo: null, //最新章节
       update: null, //时间
       timeraa: null, //更新时间
-      catalog: '', //章节列表
+      catalog: "", //章节列表
       uuid: null, //章节id
-      newArr: '', //倒序
-      showaad:false,
-      rankUrl:null,  //排行榜url
+      newArr: [], //倒序
+      showaad: false,
+      rankUrl: null, //排行榜url
+      Arr: [],
+      plnum: 0,
+      plnr: "",
     };
   },
   methods: {
-    bookid() {
-      this.$router.push("/reader");
+    //评论
+    getpl() {},
+    bookid(index) {
+      this.$router.push({
+        path: "/reader",
+        query: {
+          index,
+        },
+      });
     },
     showPopup() {
       this.show = true;
     },
     // 书籍详情
     getSubFun() {
-      if(this.$route.query.index==1){
-       console.log('分类');
-       let url = this.$store.state.sourceUrl
-       this.sourceUuid =url.slice(8)
-      this.$store.commit("bookidData", this.sourceUuid);
-
-      }else{
-      this.sourceUuid = this.$store.state.bookid; //书籍id
+      if (this.$route.query.index == 1) {
+        console.log("分类");
+        let url = this.$store.state.sourceUrl;
+        this.sourceUuid = url.slice(8);
+        this.$store.commit("bookidData", this.sourceUuid);
+      } else {
+        this.sourceUuid = this.$store.state.bookid; //书籍id
       }
-      console.log(this.$store.state.bookid,12);
+      // this.sourceUuid = "654ebfbcccd64b3ea0a51934953f300e_4";
+      console.log(this.$store.state.bookid, 12);
       //分类id
-      console.log(this.sourceUuid,123);
+      console.log(this.sourceUuid, 123);
       this.sourceUrl = this.$store.state.sourceUrl;
-      console.log(this.sourceUrl,111);
+      console.log(this.sourceUrl, 111);
       let disName = this.sourceUrl;
       let diaNameLegth = disName.length;
       let showetName = disName.substring(diaNameLegth - 37, diaNameLegth);
       // this.sourceUuid = showetName;
-      console.log(showetName,1234);
+      console.log(showetName, 1234);
 
-        this.rankUrl = this.$store.state.rankUrl;
+      this.rankUrl = this.$store.state.rankUrl;
       console.log(this.rankUrl);
-       var rankf = this.rankUrl;
-        var rankLen = rankf.length;
-        var rankFsssa = rankf.substring(rankLen - 37, rankLen);
-        console.log(rankFsssa);
-        // this.sourceUuid = rankFsssa
-   console.log(this.sourceUuid,1);
+      var rankf = this.rankUrl;
+      var rankLen = rankf.length;
+      var rankFsssa = rankf.substring(rankLen - 37, rankLen);
+      console.log(rankFsssa);
+      // this.sourceUuid = rankFsssa
+      console.log(this.sourceUuid, 1);
       getSub({ id: this.sourceUuid }).then((data) => {
         console.log("书籍详情", data);
         this.source = data.feed.entry;
@@ -200,36 +253,66 @@ export default {
 
       //章节列表
       getCatalog({ source_uuid: this.sourceUuid }).then((data) => {
-        console.log("章节列表", data);
         this.catalog = data.data.catalog; //章节列表
-        for (let i = 0; i < this.catalog.length; i++) {
-          this.newArr.unshift(this.catalog[i]);
+        for (let i = 0; i < 5; i++) {
+          this.Arr.push(this.catalog[i]);
         }
-        console.log(this.newArr);
+        for (let i = 0; i < 5; i++) {
+          this.newArr.unshift(this.catalog[i]); //倒序
+        }
+
+        console.log(this.Arr, "zx");
       });
-      
+      //pl
+      get(
+        `https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=${this.sourceUuid}`
+      ).then((res) => {
+        console.log(res, "评论");
+        this.plnum = res.all.list.length;
+        this.plnr = res.all.list;
+        this.value = Math.ceil(Math.random());
+        // console.log(value,'评分');
+      });
     },
 
-    add(uuid) {
+    add(uuid, index) {
       this.uuid = uuid;
-      console.log(this.uuid);
       this.$store.commit("getUUid", uuid);
-      this.$router.push("/reader");
+      this.$router.push({
+        path: "/reader",
+        query: {
+          uuid,
+          index,
+        },
+      });
     },
     //倒序
-    daoxu(){
-
-      
-      this.showaad = !this.showaad
-
-    }
+    daoxu() {
+      this.showaad = !this.showaad;
+    },
   },
   created() {
     this.getSubFun(); //书籍详情
+    this.getpl();
   },
 };
 </script>
 <style lang="less">
+.jt {
+  position: absolute;
+  left: 45px;
+  top: 1px;
+  font-size: 12px;
+}
+.pl {
+  position: relative;
+  margin-top: 1rem;
+  height: 5rem;
+}
+.img1 {
+  width: 34px;
+  height: 34px;
+}
 .f-cb,
 .f-cbli li {
   &::after {

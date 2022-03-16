@@ -11,9 +11,13 @@
       'reader-box',
     ]"
     @touchmove="tuozuai"
+    @touchstart="cs"
   >
     <!-- 小说内容盒子 -->
     <div class="g-main ui-main" :style="{ 'font-size': coclsize + 'px' }">
+      <div class="jiazai" v-if="false">
+        <van-loading size="34px">拼命加载中...</van-loading>
+      </div>
       <div
         class="content j-content"
         style="font-size: 1.2em; opacity: 1; height: 100vh; overflow: auto"
@@ -39,7 +43,9 @@
           ><i></i
         ></router-link>
         <li class="down j-down"></li>
-        <router-link tag="li" to="/recharge" class="rechargegg"><i></i>充值</router-link>
+        <router-link tag="li" to="/recharge" class="rechargegg"
+          ><i></i>充值</router-link
+        >
         <li class="add-book j-add-book"><i></i>加入书架</li>
         <router-link tag="li" to="/" class="home"><i></i>首页</router-link>
       </ul>
@@ -51,7 +57,7 @@
           <i class="iconfont icon-shangyizhang- color"></i><br />
           上一章
         </li>
-        <li class="xia" @click="xia">
+        <li class="xia" @click="xia1">
           <i class="iconfont icon-xiayizhang- color"></i> <br />
           下一章
         </li>
@@ -102,14 +108,15 @@ import { Toast } from "vant";
 export default {
   data() {
     return {
-      hade:true,
+      y: "",
+      hade: true,
       falg: false,
       content: null, //内容
       isCloned: false,
       show: false, //是否弹出
       shoa: false,
       catalog: null, //章节列表
-      uuid: null, //章节id
+      uuid: "", //章节id
       sourceUuid: null, //书籍id
       loading: false,
       finished: false,
@@ -117,43 +124,53 @@ export default {
       list: [],
       innerHeight: 0,
       keii: true,
-      bookIndex: 0,
+      bookIndex: '',
       code: null,
       coclsize: 10,
-      rankUrl:null,
+      rankUrl: null,
     };
   },
   watch: {
     arr() {
-      console.log(this.arr);
+      // console.log(this.arr);
       this.getContentFun();
     },
   },
   methods: {
+    // 存储哪本小说阅读到第几章
+    setid(){
+       console.log(this.uuid,'lk');
+       window.localStorage.setItem(`uuid${this.sourceUuid}`, this.uuid);
+    },
+    // 初始y,用于判断上滑还是下滑
+    cs(e) {
+      this.y = parseInt(e.touches[0].screenY);
+      
+    },
     //章节列表
     getCatalogFun() {
       this.sourceUuid = this.$store.state.bookid; //书籍id
-      console.log(this.$store.state.bookid);
+      // console.log(this.$store.state.bookid);
       //排行榜书籍id
       this.rankUrl = this.$store.state.rankUrl;
-      console.log(this.rankUrl);
-       var rankf = this.rankUrl;
-        var rankLen = rankf.length;
-        var rankFsssa = rankf.substring(rankLen - 37, rankLen);
-        console.log(rankFsssa);
-        // this.sourceUuid = rankFsssa
+      // console.log(this.rankUrl);
+      var rankf = this.rankUrl;
+      var rankLen = rankf.length;
+      var rankFsssa = rankf.substring(rankLen - 37, rankLen);
+      console.log(rankFsssa);
+      // this.sourceUuid = rankFsssa
 
       getCatalog({ source_uuid: this.sourceUuid }).then((data) => {
         console.log(data);
         this.catalog = data.data.catalog; //章节列表
 
-        console.log("书籍id", data.data.book.sourceUuid);
+        // console.log("书籍id", data.data.book.sourceUuid);
         this.sourceUuid = data.data.book.sourceUuid;
-        this.uuid = data.data.catalog[this.bookIndex].uuid;
+        // this.uuid = data.data.catalog[this.bookIndex].uuid;
         this.code = data.code;
-        console.log("vip", this.code);
+        // console.log("vip", this.code);
         //  let i = this.catalog.findIndex(item => item.id == this.uuid)
-        console.log(this.uuid);
+        // console.log(this.uuid);
 
         this.getContentFun();
         //章节内容  /传入书籍id和章节id
@@ -161,32 +178,51 @@ export default {
     },
     //章节内容
     getContentFun() {
-      //章节id
-      console.log(this.uuid);
-      // this.uuid = this.$state.uuid;
-      
       getContent({
         source_uuid: this.sourceUuid,
         content_uuid: this.uuid,
       }).then((data) => {
-        console.log(data);
+        // console.log(data);
         this.keii = true;
         this.content += data.data.content;
         this.code = data.code;
         if (this.code == -1) {
-          Toast("此章节为付费内容,请辞职");
+          Toast("此章节为付费内容,请充值");
         }
-        console.log("vip", this.code);
-        console.log(this.content);
+      });
+    },
+    // 首次进入获取章节内容
+    getbook() {
+     
+      let i = window.localStorage.getItem(`uuid${this.sourceUuid}`)
+      let uuid = this.$route.query.uuid;
+      this.uuid=uuid || i ||1
+      getContent({
+        source_uuid: this.sourceUuid,
+        content_uuid: this.uuid,
+      }).then((data) => {
+        // console.log(data);
+        this.keii = true;
+        this.content += data.data.content;
+        this.code = data.code;
+        if (this.code == -1) {
+          Toast("此章节为付费内容,请充值");
+        }
+      getCatalog({ source_uuid: this.sourceUuid }).then(res=>{
+        this.catalog = res.data.catalog;
+        console.log(this.catalog,'章节oh');
+      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
+      console.log(this.bookIndex,'章节下标');
+      })
       });
     },
     ajj() {
       this.coclsize += 1;
-      console.log(11);
+      // console.log(11);
     },
     all() {
       this.coclsize -= 1;
-      console.log(22);
+      // console.log(22);
     },
 
     //获取高度
@@ -202,26 +238,30 @@ export default {
     //   }
     // },
     //拖拽显示或者隐藏
-    tuozuai() {
+    tuozuai(e) {
+      let y = parseInt(e.touches[0].screenY);
+      let disy = this.y - y;
+
+      // console.log(event.touches,event.changedTouches,event.targetTouches);
       this.falg = false;
       // 大
       let top = Math.ceil(this.$refs.scetion_container.scrollTop + 668);
       // 小
       let conHeight = this.$refs.section_height.offsetHeight;
-      //  console.log("大",top);
-      // console.log("小",conHeight);
       if (this.keii) {
-        if (top > conHeight) {
+        if (conHeight - top < 50) {
           this.xia();
+        } else if (top == 668 && disy < 0) {
+          console.log(event, "上");
+
+          this.shang();
           // this.getContentFun()
-          this.keii = false;
-          console.log(444);
+          // this.keii = false;
         }
       }
-       if (this.code == -1) {
-          alert("打钱,不然看不了");
-        }
-     
+      if (this.code == -1) {
+        alert("此章节为付费内容,请充值");
+      }
     },
     //点击显示
     btn() {
@@ -239,32 +279,47 @@ export default {
     },
     //获取章节id
     add(uuid) {
-      this.uuid = uuid;
-      console.log(this.catalog);
+      // this.uuid = uuid;
+      // console.log(this.catalog,'获取');
       this.bookIndex = this.catalog.findIndex((item) => item.uuid == uuid);
       this.getContentFun();
-      console.log("章节id", uuid);
+      // console.log("章节id", uuid);
     },
     //上一章
     shang() {
-      this.bookIndex -= 1;
-      this.uuid = this.catalog[this.bookIndex].uuid;
-
-      this.getContentFun();
-      console.log("上");
+      if (this.bookIndex > 1) {
+        this.content = "";
+        this.bookIndex -= 1;
+        this.uuid = this.catalog[this.bookIndex].uuid;
+        this.keii = false;
+        this.getContentFun();
+      }
+      // console.log("上");
     },
     //下一章
     xia() {
+      console.log(this.bookIndex,'下一章下标');
       this.bookIndex += 1;
       this.keii = false;
       this.uuid = this.catalog[this.bookIndex].uuid;
       this.getContentFun();
       let top = document.documentElement.scrollTop || document.body.scrollTop;
-      console.log(document.documentElement.scrollTop);
+      // console.log(document.documentElement.scrollTop);
       console.log(top);
-      console.log("下");
+      // console.log("下");
     },
-        //定时器
+    xia1() {
+      this.content = "";
+      this.bookIndex += 1;
+      this.keii = false;
+      this.uuid = this.catalog[this.bookIndex].uuid;
+      this.getContentFun();
+      let top = document.documentElement.scrollTop || document.body.scrollTop;
+      // console.log(document.documentElement.scrollTop);
+      console.log(top);
+      // console.log("下");
+    },
+    //定时器
     time() {
       if (this.hade == false) {
         setTimeout(t);
@@ -273,11 +328,10 @@ export default {
       let t = setTimeout(() => {
         this.hade = false;
         this.xia();
-         if (this.code == -1) {
-          Toast("打钱,不然看不了");
+        if (this.code == -1) {
+          Toast("此章节为付费内容,请充值");
         }
-        console.log("定时器结束");
-        
+        // console.log("定时器结束");
       }, 1000);
     },
 
@@ -297,13 +351,13 @@ export default {
     // },
   },
   created() {
-      console.log(this.rankUrl);
+    // console.log(this.rankUrl);
 
-    this.getCatalogFun(); //章节列表
-    this.add();
-    this.getContentFun(); //章节内容
-    this.time()
-    
+    // this.getCatalogFun(); //章节列表
+    // this.add();
+    // this.getContentFun(); //章节内容
+    // this.time();
+    this.getbook();
   },
   mounted() {
     // this.$nextTick(() => {
@@ -313,6 +367,10 @@ export default {
     // });
     // window.addEventListener("scroll", true);
   },
+  // 离开阅读页面时保存对应小说章节
+  destroyed(){
+ this.setid();
+}
 };
 </script>
 
