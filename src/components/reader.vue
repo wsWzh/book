@@ -193,10 +193,15 @@ export default {
     },
     // 首次进入获取章节内容
     getbook() {
-     
+        getCatalog({ source_uuid: this.sourceUuid }).then(res=>{
+        this.catalog = res.data.catalog;
+      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
+      console.log(this.bookIndex,'章节下标');
+      if(res.code==0){
+              console.log(this.catalog[0],'oh');
       let i = window.localStorage.getItem(`uuid${this.sourceUuid}`)
       let uuid = this.$route.query.uuid;
-      this.uuid=uuid || i ||1
+      this.uuid=uuid || i ||this.catalog[0].uuid
       getContent({
         source_uuid: this.sourceUuid,
         content_uuid: this.uuid,
@@ -208,13 +213,11 @@ export default {
         if (this.code == -1) {
           Toast("此章节为付费内容,请充值");
         }
-      getCatalog({ source_uuid: this.sourceUuid }).then(res=>{
-        this.catalog = res.data.catalog;
-        console.log(this.catalog,'章节oh');
-      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
-      console.log(this.bookIndex,'章节下标');
-      })
+    
       });
+      }
+      })
+
     },
     ajj() {
       this.coclsize += 1;
@@ -353,7 +356,7 @@ export default {
   created() {
     // console.log(this.rankUrl);
 
-    // this.getCatalogFun(); //章节列表
+    this.getCatalogFun(); //章节列表
     // this.add();
     // this.getContentFun(); //章节内容
     // this.time();
