@@ -19,13 +19,49 @@ export function login(data) {
     data
   })
 }
-export function userzc(username,password) {
+export function update(data) {
+  return request({
+    url: '/carousel/saveOrUpdate',
+    method: 'post',
+    data
+  })
+}
+export function dele(data) {
+  return request({
+    url: `/carousel/deleteById?id=${data}`,
+    method: 'get',
+
+  })
+}
+export function findAll(data) {
+  return request({
+    url: '/carousel/findAll',
+    method: 'get',
+    data
+  })
+}
+export function info(token) {
+  return request({
+    url: `/user/info?token=${token}`,
+    method: 'get',
+    headers: {
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Tue, 12 Apr 2022 01:25:39 GMT",
+      "keep-alive": "timeout=60",
+      "transfer-encoding": "chunked",
+      "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+    }
+
+  })
+}
+export function userzc(username, password) {
   return request({
     url: '/user/register',
     method: 'post',
-    params:{
-      username:username,
-      password:password
+    params: {
+      username: username,
+      password: password
     }
   })
 }

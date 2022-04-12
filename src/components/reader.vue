@@ -139,7 +139,7 @@ export default {
   methods: {
     // 存储哪本小说阅读到第几章
     setid(){
-       console.log(this.uuid,'lk');
+      
        window.localStorage.setItem(`uuid${this.sourceUuid}`, this.uuid);
     },
     // 初始y,用于判断上滑还是下滑
@@ -172,7 +172,7 @@ export default {
         //  let i = this.catalog.findIndex(item => item.id == this.uuid)
         // console.log(this.uuid);
 
-        this.getContentFun();
+        // this.getContentFun();
         //章节内容  /传入书籍id和章节id
       });
     },
@@ -195,13 +195,14 @@ export default {
     getbook() {
         getCatalog({ source_uuid: this.sourceUuid }).then(res=>{
         this.catalog = res.data.catalog;
-      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
-      console.log(this.bookIndex,'章节下标');
+     
       if(res.code==0){
-              console.log(this.catalog[0],'oh');
+      console.log(this.catalog[0],'oh');
       let i = window.localStorage.getItem(`uuid${this.sourceUuid}`)
       let uuid = this.$route.query.uuid;
       this.uuid=uuid || i ||this.catalog[0].uuid
+      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
+      console.log(this.bookIndex,  this.catalog.findIndex((item) => item.uuid == this.uuid),'章节下标');
       getContent({
         source_uuid: this.sourceUuid,
         content_uuid: this.uuid,
@@ -252,10 +253,12 @@ export default {
       // 小
       let conHeight = this.$refs.section_height.offsetHeight;
       if (this.keii) {
-        if (conHeight - top < 50) {
+        console.log(conHeight,top);
+        if (conHeight - top < 300) {
+          console.log('下啊');
           this.xia();
         } else if (top == 668 && disy < 0) {
-          console.log(event, "上");
+          console.log(event, "上啊");
 
           this.shang();
           // this.getContentFun()

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Toast } from "vant";
 import store from '@/store'
 import router from '@/router'
-import { getToken } from './auth'
+// import { getToken } from './auth'
 import qs from 'querystring'
 // create an axios instance
 const service = axios.create({
@@ -14,14 +14,15 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    const token=window.localStorage.getItem('token')
     // do something before request is sent
-    if (store.getters.token) {
+    if (token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
 
       // config.headers['X-Token'] = getToken()
-      config.headers['Authorization'] = getToken()
+      config.headers['Authorization'] = token
     }
     return config
   },

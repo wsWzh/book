@@ -359,7 +359,9 @@ export default {
       yz: "", //优质
       dj: "", //大家
       xs: "", //新书
-      show:false,
+      show: false,
+      dd: "dd",
+      aa: '',
     };
   },
   components: {
@@ -370,6 +372,7 @@ export default {
     heaDer, //加载
   },
   computed: {},
+
   methods: {
     // 轮播图跳转
     bookid(id, url) {
@@ -406,15 +409,16 @@ export default {
       }
     },
     ifgen() {
-      if (sessionStorage.getItem("gender")) {
+      if (sessionStorage.getItem('gender')) {
         this.gen = false;
       }
     },
     genfun() {
       sessionStorage.setItem("gender", this.gender);
+      window.localStorage.setItem('gen',this.gender)
       getNavi({ gender: this.gender }).then((res) => {
         // if()
-        console.log(res,1);
+        console.log(res, 1);
         sessionStorage.setItem("jx", res.data.navi[0].url);
         sessionStorage.setItem("mf", res.data.navi[1].url);
         this.getjx();
@@ -425,38 +429,37 @@ export default {
         this.type = sessionStorage.getItem("jx");
         getShowFree(this.type).then((res) => {
           console.log(res, "精选");
-          if(res.resCode==0){
-          if (sessionStorage.getItem("gender") == 1) {
-            console.log("男");
-            this.img = res.data.list[0].banners; //轮播
-            this.dh = res.data.list[1].shortCut; //导航
-            this.qt = res.data.list[2].list; //强推
-            this.qt.shift();
-            this.rq = res.data.list[3].list; //人气
-            this.rb = res.data.list[4].list; //热榜
-            this.jp = res.data.list[5].list; //精品
-            this.gn = res.data.list[6].list; //高能
-            this.wj = res.data.list[7].list; //完结
-            this.yz = res.data.list[8].list; //优质
-            this.dj = res.data.list[9].list; //大家
-            this.xs = res.data.list[10].list; //最热新书榜
-          } else {
-            console.log("女");
-            this.img = res.data.list[0].banners; //轮播
-            this.dh = res.data.list[1].shortCut; //导航
-            this.qt = res.data.list[2].list; //强推
-            this.qt.shift();
-            this.rq = res.data.list[3].list; //人气
-            this.rb = res.data.list[4].list; //热榜
-            this.jp = res.data.list[5].list; //精品
-            this.gn = res.data.list[6].list; //高能
-            this.wj = res.data.list[7].list; //完结
-            this.yz = res.data.list[8].list; //优质
-            //this.dj = res.data.list[9].list; //大家
-            //this.xs=res.data.list[10].list
-          }
-          this.show=true
-          
+          if (res.resCode == 0) {
+            if (sessionStorage.getItem("gender") == 1) {
+              console.log("男");
+              this.img = res.data.list[0].banners; //轮播
+              this.dh = res.data.list[1].shortCut; //导航
+              this.qt = res.data.list[2].list; //强推
+              this.qt.shift();
+              this.rq = res.data.list[3].list; //人气
+              this.rb = res.data.list[4].list; //热榜
+              this.jp = res.data.list[5].list; //精品
+              this.gn = res.data.list[6].list; //高能
+              this.wj = res.data.list[7].list; //完结
+              this.yz = res.data.list[8].list; //优质
+              this.dj = res.data.list[9].list; //大家
+              this.xs = res.data.list[10].list; //最热新书榜
+            } else {
+              console.log("女");
+              this.img = res.data.list[0].banners; //轮播
+              this.dh = res.data.list[1].shortCut; //导航
+              this.qt = res.data.list[2].list; //强推
+              this.qt.shift();
+              this.rq = res.data.list[3].list; //人气
+              this.rb = res.data.list[4].list; //热榜
+              this.jp = res.data.list[5].list; //精品
+              this.gn = res.data.list[6].list; //高能
+              this.wj = res.data.list[7].list; //完结
+              this.yz = res.data.list[8].list; //优质
+              //this.dj = res.data.list[9].list; //大家
+              //this.xs=res.data.list[10].list
+            }
+            this.show = true;
           }
         });
       }
@@ -466,7 +469,9 @@ export default {
     this.ifgen();
     this.getjx();
   },
-  mounted() {},
+  mounted() {
+
+  },
 };
 </script>
 <style  scoped>

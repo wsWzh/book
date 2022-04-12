@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vant from 'vant';
 import App from './App.vue'
 import router from './router'
+import Router from 'vue-router-uni'
 import store from './store'
 import AudioPlayer from '@liripeng/vue-audio-player'
 import '@liripeng/vue-audio-player/lib/style.css'
@@ -43,6 +44,13 @@ Vue.use(List);
 import { Toast } from 'vant';
 
 Vue.use(Toast)
+Vue.use(Router, {
+  module: 'strict',
+  tabbar: [
+    'pages/hello',
+    'pages/my/index'
+  ]
+})
 
 new Vue({
   router,

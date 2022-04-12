@@ -16,16 +16,12 @@
       </div>
 
       <div class="m-acinfo">
-        <img
-          width="70"
-          height="70"
-          src="https://yuedust.yuedu.126.net/assets/mobile/images/tx-default.png"
-        />
+        <img width="70" height="70" :src="img" />
         <h2>
-          手机用户_3069
+          用户名：{{ name }}
           <span class="lv">Lv 9</span>
         </h2>
-        <p>登录账号：15766723069(手机号)</p>
+        <p>登录Id：{{ zh }}</p>
       </div>
 
       <div class="m-acmore">
@@ -35,7 +31,11 @@
               <span class="label">余额</span>
               <span class="value">充值送红包</span>
               <span class="fr"
-                ><router-link tag="span" to="/recharge" class="ui-red-light btn-x" id="J_recharge"
+                ><router-link
+                  tag="span"
+                  to="/recharge"
+                  class="ui-red-light btn-x"
+                  id="J_recharge"
                   >充值</router-link
                 ></span
               >
@@ -77,29 +77,41 @@
   </div>
 </template>
 <script>
-import { getUserInfo } from "../api/base";
+// import { getUserInfo } from "../api/base";
+import { info } from "../api/user";
 export default {
   data() {
     return {
       UserInfo: null,
+      tonken: window.localStorage.getItem("token"),
+      zh: "",
+      name: "",
+      img: "",
     };
   },
   methods: {
-    getUserInfoFun() {
-      getUserInfo({ userId: 4043564469243 }).then((data) => {
-        console.log(data);
+    userInfo() {
+      info(this.tonken).then((res) => {
+        console.log(res);
+        this.zh = res.data.id;
+        this.name = res.data.username;
+        this.img = res.data.userFace;
       });
     },
+    // getUserInfoFun() {
+    //   getUserInfo({ userId: 4043564469243 }).then((data) => {
+    //     console.log(data);
+    //   });
+    // },
     //退出
-    tuichu(){
+    tuichu() {
       localStorage.removeItem("token");
       console.log("退出登录成功");
-      this.$router.push("/login")
-
-    }
+      this.$router.push("/login");
+    },
   },
   created() {
-    this.getUserInfoFun();
+    this.userInfo();
   },
 };
 </script>

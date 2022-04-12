@@ -2,7 +2,7 @@
   <div class="seach">
     <div class="title f-cb">
       <section class="m-search-book">
-        <a class="left" href="/"><span class="ui-leftaw-2"></span></a>
+        <a class="left" @click="cd"><span class="ui-leftaw-2"></span></a>
         <div class="search-input">
           <div class="seach-box">
             <div class="inner f-cb f-fl">
@@ -101,7 +101,9 @@ export default {
   
   
   methods: {
- 
+    cd(){
+      this.$router.push('/jx')
+    },
     //热门搜索
 
     //搜索建议

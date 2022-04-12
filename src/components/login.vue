@@ -10,9 +10,9 @@
       <div class="content">
         <!-- 手机 -->
         <div class="m-login-header" style="margin-bottom: 3rem">
-          <a class="left back" id="goBack" href="/"></a>
-          <span class="">快速登录</span>
-          <a class="right" href="/" id="goHome">首页</a>
+          <a class="left back" id="goBack" @click="dd1"></a>
+          <span class="">{{ title }}</span>
+          <a class="right" @click="dd" id="goHome">首页</a>
         </div>
         <!-- <div class="m-login-content">
           <div class="getCode-block">
@@ -66,9 +66,13 @@
               >注册</van-button
             >
           </div>
-          <div v-show="show" style="text-align: center; font-size: 13px">
+          <div v-if="show" style="text-align: center; font-size: 13px">
             <span>没有账号?</span>
             <a class="zc" @click="zc">点击注册</a>
+          </div>
+          <div v-else style="text-align: center; font-size: 13px">
+            <span>已有账号?</span>
+            <a class="zc" @click="dl">点击登录</a>
           </div>
         </van-form>
       </div>
@@ -108,6 +112,7 @@ import { login, userzc } from "../api/user";
 export default {
   data() {
     return {
+      title: "快速登录",
       username: "",
       phone: "",
       userName: "",
@@ -117,8 +122,19 @@ export default {
     };
   },
   methods: {
+    dd1(){
+      this.$router.go(-1)
+    },
+    dd(){
+      this.$router.push('/jx')
+    },
+    dl() {
+      (this.title = "快速登录"), (this.show = true);
+      this.username = "";
+      this.password = "";
+    },
     zc() {
-      this.show = false;
+      (this.title = "快速注册"), (this.show = false);
       this.username = "";
       this.password = "";
     },
@@ -142,7 +158,6 @@ export default {
             this.username = "";
             this.password = "";
             this.show = true;
-            
           }
         });
         // post()

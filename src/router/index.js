@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import yc from '../views/yc.vue'
-
+import {Toast} from 'vant'
 Vue.use(VueRouter)
 
 const routes = [
@@ -37,7 +37,7 @@ const routes = [
     component: () => import("../views/home.vue"),
 
   },
-  
+
   //男生
   {
     path: '/',
@@ -46,44 +46,44 @@ const routes = [
   //精选
   {
     path: '/jx',
-    name:'jx',
-    component: ()=>import("../views/jx.vue"),
+    name: 'jx',
+    component: () => import("../views/jx.vue"),
   },
   //听书
   {
     path: '/ts',
-    name:'ts',
-    component: ()=>import("../views/ts.vue"),
+    name: 'ts',
+    component: () => import("../views/ts.vue"),
   },
   // 听书详情
   {
     path: '/tsxq',
-    name:'tsxq',
-    component: ()=>import("../views/tsxq.vue"),
+    name: 'tsxq',
+    component: () => import("../views/tsxq.vue"),
   },
   // 种田
   {
     path: '/nvzt',
-    name:'nvzt',
-    component: ()=>import("../views/nvzt.vue"),
+    name: 'nvzt',
+    component: () => import("../views/nvzt.vue"),
   },
   // 女生完本
   {
     path: '/nvwb',
-    name:'nvwb',
-    component: ()=>import("../components/nvwb.vue"),
+    name: 'nvwb',
+    component: () => import("../components/nvwb.vue"),
   },
   // 外部链接
   {
     path: '/wl',
-    name:'wl',
-    component: ()=>import("../components/wl.vue"),
+    name: 'wl',
+    component: () => import("../components/wl.vue"),
   },
   //导航
   {
     path: '/dh',
-    name:'dh',
-    component: ()=>import("../views/dh.vue"),
+    name: 'dh',
+    component: () => import("../views/dh.vue"),
   },
   {
     path: '/yc',
@@ -135,15 +135,16 @@ const routes = [
     name: 'userInfo',
     component: () => import("../views/userInfo.vue"),
     beforeEnter: (to, form, next) => {
-      console.log("路由守卫执行")
       let login = window.localStorage.getItem("token");
-      console.log("login",login);
       //判断有没有值
       if (!login) {
         next("/login");
+        Toast('请先登录')
         return;
       } else {
+       
         next();
+
       }
     }
 
@@ -168,45 +169,45 @@ const routes = [
   },
   //书籍详情
   {
-    path:'/source',
-    name:'source',
-    component:()=> import("../components/source.vue")
+    path: '/source',
+    name: 'source',
+    component: () => import("../components/source.vue")
   },
   //小说
   {
-    path:'/reader',
-    name:'reader',
-    component:()=> import("../components/reader.vue")
+    path: '/reader',
+    name: 'reader',
+    component: () => import("../components/reader.vue")
   },
   //目录
   {
-    path:'/catalogue',
-    name:'catalogue',
-    component:() => import ("../components/catalogue.vue")
+    path: '/catalogue',
+    name: 'catalogue',
+    component: () => import("../components/catalogue.vue")
   },
   //分类里面
   {
-    path:'/original',
+    path: '/original',
     name: 'original',
-    component:()=> import ("../components/original.vue")
+    component: () => import("../components/original.vue")
 
   },
   //充值
   {
-    path:'/recharge',
-    name:'recharge',
-    component:() => import ("../components/recharge.vue")
+    path: '/recharge',
+    name: 'recharge',
+    component: () => import("../components/recharge.vue")
   },
   //排行榜里面
   {
-    path:'/sell',
-    name:'sell',
-    component:()=> import ("../components/sell.vue")
+    path: '/sell',
+    name: 'sell',
+    component: () => import("../components/sell.vue")
   },
   {
-    path:'/female',
-    name:'female',
-    component:()=> import ("../components/female.vue")
+    path: '/female',
+    name: 'female',
+    component: () => import("../components/female.vue")
   }
 ]
 

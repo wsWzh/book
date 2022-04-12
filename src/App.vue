@@ -1,19 +1,8 @@
 <template>
   <div id="app">
     <!-- 首页 -->
-    <div class="gg" v-if="statu">
-      <img
-        src="https://easyreadfs.nosdn.127.net/EwDS9h-WJhjxsXIwzUZgXg==/8796093025060935621#640960"
-        alt="广告"
-        width="100%"
-      />
-      <div class="tg">
-        <van-button style="background-color: rgba(86, 83, 83, 0.5)" @click="tg1"
-          >{{ times }} 跳过</van-button
-        >
-      </div>
-    </div>
-    <div v-else>
+    
+    <div>
       <router-view></router-view>
     </div>
 
