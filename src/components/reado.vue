@@ -37,6 +37,7 @@
           </li>
         </ul>
         <van-divider>个人书架</van-divider>
+        
         <ul>
           <li v-for="item in content1" :key="item.id" @click="bookid(item.id)">
             <div class="img">
@@ -57,7 +58,6 @@ import { findAll } from "../api/user";
 export default {
   data() {
     return {
-      
       content: null,
       content1: [],
     };
@@ -65,20 +65,20 @@ export default {
   methods: {
     findAll() {
       findAll().then((res) => {
-        console.log(res,1);
-        let arr=res.data
-        let arr1=[]
-        arr.forEach(element => {
-          if(element.id>7){
+        console.log(res, 1);
+        let arr = res.data;
+        let arr1 = [];
+        arr.forEach((element) => {
+          if (element.id > 7) {
             arr1.push({
-              cover:element.url,
-              title:element.name,
-              id:element.introduce
-            })
+              cover: element.url,
+              title: element.name,
+              id: element.introduce,
+            });
           }
         });
-        console.log(arr1,1);
-        this.content1=arr1
+        console.log(arr1, 1);
+        this.content1 = arr1;
       });
     },
     // position 为关闭时点击的位置
@@ -102,7 +102,7 @@ export default {
   },
   created() {
     this.getShelfFun();
-    this.findAll()
+    this.findAll();
   },
 };
 </script>

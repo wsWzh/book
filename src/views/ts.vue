@@ -1,40 +1,34 @@
 <template>
   <div style="height: 1000px">
     <!-- 加载 -->
-    <hea-der v-show="false"></hea-der>
+    <hea-der v-show="show"></hea-der>
     <!-- 头部 -->
-    <headara></headara>
+    <headara style="display: sticky;top: 0;"></headara>
     <!-- 查询 -->
     <seaCh></seaCh>
     <!-- 书籍展示 -->
-    <div>
+    <div v-show="!show">
       <!-- 轮播 -->
       <div>
-        <img
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+          <van-swipe-item v-for="item in lb" :key="item.id" @click="bookid(item.id)"><img width="100%" :src="item.cover"
+              alt="" /></van-swipe-item>
+        </van-swipe>
+        <!-- <img
           @click="bookid(qtid)"
           width="100%"
           src="https://easyreadfs.nosdn.127.net/gC3JUXdvMCU9BEPFWtDLSA==/8796093025013536332"
           alt=""
-        />
+        /> -->
       </div>
       <!-- 重磅推荐 -->
       <div class="qt">
         <div class="qt1">
           <div class="h1">重磅推荐</div>
           <div class="img">
-            <img
-              @click="bookid(qtid)"
-              style="margin-left: 6px"
-              width="80"
-              src="https://easyreadfs.nosdn.127.net/amsTsTm-eE1v6WCGMpq49w==/8796093024374296757"
-              alt="本周强推"
-            />
-            <van-icon
-              color="white"
-              class="icon"
-              name="play-circle-o"
-              size="20"
-            />
+            <img @click="bookid(qtid)" style="margin-left: 6px" width="80"
+              src="https://easyreadfs.nosdn.127.net/amsTsTm-eE1v6WCGMpq49w==/8796093024374296757" alt="本周强推" />
+            <van-icon color="white" class="icon" name="play-circle-o" size="20" />
           </div>
 
           <h5>重生之商业大亨</h5>
@@ -45,26 +39,10 @@
         </div>
 
         <van-row style="text-align: center">
-          <van-col
-            span="6"
-            v-for="item in qt"
-            :key="item.id"
-            @click="bookid(item.id)"
-          >
+          <van-col span="6" v-for="item in qt" :key="item.id" @click="bookid(item.id)">
             <div class="img">
-              <img
-                style="padding-left: 10px"
-                width="75"
-                height="100"
-                :src="item.cover"
-                alt=""
-              />
-              <van-icon
-                color="white"
-                class="icon"
-                name="play-circle-o"
-                size="20"
-              />
+              <img style="padding-left: 10px" width="75" height="100" :src="item.cover" alt="" />
+              <van-icon color="white" class="icon" name="play-circle-o" size="20" />
             </div>
 
             <span style="font-size: 13px">{{ item.title }} </span>
@@ -78,33 +56,15 @@
       <!-- 本周热听 -->
       <div class="qt">
         <div class="h1">本周热听</div>
-        <div
-          class="rq"
-          v-for="item in rt"
-          :key="item.id"
-          @click="bookid(item.id)"
-        >
+        <div class="rq" v-for="item in rt" :key="item.id" @click="bookid(item.id)">
           <div class="img">
-            <img
-              style="margin-left: 6px"
-              height="112"
-              width="80"
-              :src="item.cover"
-              alt="本周强推"
-            />
-            <van-icon
-              color="white"
-              class="icon"
-              name="play-circle-o"
-              size="20"
-            />
+            <img style="margin-left: 6px" height="112" width="80" :src="item.cover" alt="本周强推" />
+            <van-icon color="white" class="icon" name="play-circle-o" size="20" />
           </div>
 
           <div class="rq1">
             <div class="rqtitle">{{ item.title }}</div>
-            <span style="font-size: 13px"
-              >{{ item.author }}/{{ item.category }}</span
-            >
+            <span style="font-size: 13px">{{ item.author }}/{{ item.category }}</span>
             <div class="conten1">
               {{ item.content }}
             </div>
@@ -114,12 +74,8 @@
       <van-divider />
       <!-- 轮播2 -->
       <div>
-        <img
-          @click="bookid(qtid1)"
-          width="100%"
-          src="https://easyreadfs.nosdn.127.net/gpde2EJ0gDZaWraaPCKCHw==/8796093024849243938"
-          alt=""
-        />
+        <img @click="bookid(qtid1)" width="100%"
+          src="https://easyreadfs.nosdn.127.net/gpde2EJ0gDZaWraaPCKCHw==/8796093024849243938" alt="" />
       </div>
       <van-divider />
 
@@ -128,26 +84,10 @@
         <div class="h1">女生精选</div>
 
         <van-row style="text-align: center">
-          <van-col
-            span="6"
-            v-for="item in jx"
-            :key="item.id"
-            @click="bookid(item.id)"
-          >
+          <van-col span="6" v-for="item in jx" :key="item.id" @click="bookid(item.id)">
             <div class="img">
-              <img
-                style="padding-left: 10px"
-                width="75"
-                height="100"
-                :src="item.cover"
-                alt=""
-              />
-              <van-icon
-                color="white"
-                class="icon"
-                name="play-circle-o"
-                size="20"
-              />
+              <img style="padding-left: 10px" width="75" height="100" :src="item.cover" alt="" />
+              <van-icon color="white" class="icon" name="play-circle-o" size="20" />
             </div>
 
             <span style="font-size: 13px">{{ item.title }} </span>
@@ -164,115 +104,134 @@
 </template>
 
 <script>
-import headara from "../components/header.vue"; //头部
-import seaCh from "../components/seach.vue"; //搜索
-import heaDer from "../components/load.vue"; //加载模块
-import { get } from "../api/https";
-export default {
-  data() {
-    return {
-      url: "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=audio_41bf72a6661d4bb18e8972a2a965ea20_4&title=%E9%94%A6%E7%BB%A3%E7%9A%87%E5%90%8E",
-      qt: "",
-      qtid: "audio_3e873e3055b54604b572f290174e0fc6_4", //轮播
-      rt: "",
-      qtid1: "audio_4487ba396c814934b6a8d0c3fb7d4060_4", //轮播1
-      jx: "",
-    };
-  },
-  components: {
-    headara,
-    seaCh,
-    heaDer,
-  },
-  computed: {},
-  methods: {
-    bookid(id) {
-      console.log(id);
-      this.$router.push({path:'/tsxq',query:{
-        id
-      }})
+  import headara from "../components/header.vue"; //头部
+  import seaCh from "../components/seach.vue"; //搜索
+  import heaDer from "../components/load.vue"; //加载模块
+  import { get } from "../api/https";
+  export default {
+    data() {
+      return {
+        show: true,
+        lb1: "",
+        lb: [],
+        url: "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=audio_41bf72a6661d4bb18e8972a2a965ea20_4&title=%E9%94%A6%E7%BB%A3%E7%9A%87%E5%90%8E",
+        qt: "",
+        qtid: "audio_3e873e3055b54604b572f290174e0fc6_4", //轮播
+        rt: "",
+        qtid1: "audio_4487ba396c814934b6a8d0c3fb7d4060_4", //轮播1
+        jx: "",
+      };
     },
-    go() {},
-    getbook() {
-      get(
-        "https://apis.netstart.cn/yunyuedu/store/show.json?type=audio&uuid=b67282bb443845fabe5b543795a27618"
-      ).then((res) => {
-        console.log(res.data.list, "听书");
-        this.qt = res.data.list[1].list;
-        this.qt.shift();
-        this.rt = res.data.list[2].list;
-        this.jx = res.data.list[4].list;
-      });
+    components: {
+      headara,
+      seaCh,
+      heaDer,
     },
-  },
-  created() {
-    this.getbook();
-  },
-  mounted() {},
-};
+    computed: {},
+    methods: {
+      bookid(id) {
+        console.log(id);
+        this.$router.push({
+          path: "/tsxq",
+          query: {
+            id,
+          },
+        });
+      },
+      go() { },
+      getbook() {
+        get(
+          "https://apis.netstart.cn/yunyuedu/store/show.json?type=audio&uuid=b67282bb443845fabe5b543795a27618"
+        ).then((res) => {
+          if (res.resCode == 0) {
+            this.show = false;
+          }
+          this.lb = res.data.list[0].banners;
+          console.log(res.data.list, "听书");
+          this.qt = res.data.list[1].list;
+          this.qt.shift();
+          this.rt = res.data.list[2].list;
+          this.jx = res.data.list[4].list;
+        });
+      },
+    },
+    created() {
+      this.getbook();
+    },
+    mounted() { },
+  };
 </script>
-<style  scoped>
-.rqtitle {
-  font-size: 15px;
-  font-weight: 800;
-  margin-bottom: 1rem;
-}
-.img {
-  position: relative;
-}
-.icon {
-  position: absolute;
-  left: 10px;
-  top: 80%;
-}
-.qt {
-  position: relative;
-}
-.qt1 {
-  margin-bottom: 1rem;
-}
-.h1 {
-  font-size: 17px;
-  font-weight: 600;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: 6px;
-}
-h5 {
-  position: absolute;
-  left: 100px;
-  top: 2rem;
-}
-.s1 {
-  position: absolute;
-  left: 110px;
-  top: 4rem;
-  font-size: 13px;
-}
-.conten {
-  position: absolute;
-  left: 100px;
-  top: 6rem;
-  font-size: 13px;
-  right: 10px;
-}
-.rq1 {
-  position: absolute;
-  top: 0;
-  left: 100px;
-}
-.rq {
-  position: relative;
-  margin-bottom: 1rem;
-}
-.conten1 {
-  font-size: 13px;
-  height: 3rem;
-  padding-top: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
+<style scoped>
+  .rqtitle {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .img {
+    position: relative;
+  }
+
+  .icon {
+    position: absolute;
+    left: 10px;
+    top: 80%;
+  }
+
+  .qt {
+    position: relative;
+  }
+
+  .qt1 {
+    margin-bottom: 1rem;
+  }
+
+  .h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 6px;
+  }
+
+  h5 {
+    position: absolute;
+    left: 100px;
+    top: 2rem;
+  }
+
+  .s1 {
+    position: absolute;
+    left: 110px;
+    top: 4rem;
+    font-size: 13px;
+  }
+
+  .conten {
+    position: absolute;
+    left: 100px;
+    top: 6rem;
+    font-size: 13px;
+    right: 10px;
+  }
+
+  .rq1 {
+    position: absolute;
+    top: 0;
+    left: 100px;
+  }
+
+  .rq {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .conten1 {
+    font-size: 12px;
+    height: 3rem;
+    padding-top: 0.5rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
 </style>

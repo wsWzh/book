@@ -16,18 +16,19 @@
     <!-- 小说内容盒子 -->
     <div class="g-main ui-main" :style="{ 'font-size': coclsize + 'px' }">
       <div class="jiazai" v-if="false">
-        <van-loading size="34px">拼命加载中...</van-loading>
+        <van-loading size="34px">拼命加载中(请尝试下拉刷新)...</van-loading>
       </div>
       <div
         class="content j-content"
         style="font-size: 1.2em; opacity: 1; height: 100vh; overflow: auto"
         @click="btn"
         ref="scetion_container"
+        @scroll="hand"
       >
         <div class="m-content" ref="section_height">
           <!-- 内容 -->
-          <div v-if="content">
-            <div v-html="content">{{ content }}</div>
+          <div>
+            <div v-html="content"></div>
             <div class="jiazai" v-if="hade">
               <van-loading size="34px">拼命加载中...</van-loading>
             </div>
@@ -124,7 +125,7 @@ export default {
       list: [],
       innerHeight: 0,
       keii: true,
-      bookIndex: '',
+      bookIndex: "",
       code: null,
       coclsize: 10,
       rankUrl: null,
@@ -137,15 +138,20 @@ export default {
     },
   },
   methods: {
+    hand(e) {
+      const { scrollTop, clientHeight, scrollHeight } = e.target;
+      console.log(scrollTop, clientHeight, scrollHeight, "长春市");
+      if (scrollHeight-(scrollTop + clientHeight) <10 ) {
+        this.xia();
+      }
+    },
     // 存储哪本小说阅读到第几章
-    setid(){
-      
-       window.localStorage.setItem(`uuid${this.sourceUuid}`, this.uuid);
+    setid() {
+      window.localStorage.setItem(`uuid${this.sourceUuid}`, this.uuid);
     },
     // 初始y,用于判断上滑还是下滑
     cs(e) {
       this.y = parseInt(e.touches[0].screenY);
-      
     },
     //章节列表
     getCatalogFun() {
@@ -193,32 +199,36 @@ export default {
     },
     // 首次进入获取章节内容
     getbook() {
-        getCatalog({ source_uuid: this.sourceUuid }).then(res=>{
+      getCatalog({ source_uuid: this.sourceUuid }).then((res) => {
         this.catalog = res.data.catalog;
-     
-      if(res.code==0){
-      console.log(this.catalog[0],'oh');
-      let i = window.localStorage.getItem(`uuid${this.sourceUuid}`)
-      let uuid = this.$route.query.uuid;
-      this.uuid=uuid || i ||this.catalog[0].uuid
-      this.bookIndex = this.$route.query.index || this.catalog.findIndex((item) => item.uuid == this.uuid);
-      console.log(this.bookIndex,  this.catalog.findIndex((item) => item.uuid == this.uuid),'章节下标');
-      getContent({
-        source_uuid: this.sourceUuid,
-        content_uuid: this.uuid,
-      }).then((data) => {
-        // console.log(data);
-        this.keii = true;
-        this.content += data.data.content;
-        this.code = data.code;
-        if (this.code == -1) {
-          Toast("此章节为付费内容,请充值");
-        }
-    
-      });
-      }
-      })
 
+        if (res.code == 0) {
+          console.log(this.catalog[0], "oh");
+          let i = window.localStorage.getItem(`uuid${this.sourceUuid}`);
+          let uuid = this.$route.query.uuid;
+          this.uuid = uuid || i || this.catalog[0].uuid;
+          this.bookIndex =
+            this.$route.query.index ||
+            this.catalog.findIndex((item) => item.uuid == this.uuid);
+          console.log(
+            this.bookIndex,
+            this.catalog.findIndex((item) => item.uuid == this.uuid),
+            "章节下标"
+          );
+          getContent({
+            source_uuid: this.sourceUuid,
+            content_uuid: this.uuid,
+          }).then((data) => {
+            // console.log(data);
+            this.keii = true;
+            this.content += data.data.content;
+            this.code = data.code;
+            if (this.code == -1) {
+              Toast("此章节为付费内容,请充值");
+            }
+          });
+        }
+      });
     },
     ajj() {
       this.coclsize += 1;
@@ -253,9 +263,9 @@ export default {
       // 小
       let conHeight = this.$refs.section_height.offsetHeight;
       if (this.keii) {
-        console.log(conHeight,top);
-        if (conHeight - top < 300) {
-          console.log('下啊');
+        console.log(conHeight, top);
+        if (conHeight - top < 300 && this.bookIndex == 0) {
+          console.log("下啊");
           this.xia();
         } else if (top == 668 && disy < 0) {
           console.log(event, "上啊");
@@ -304,7 +314,7 @@ export default {
     },
     //下一章
     xia() {
-      console.log(this.bookIndex,'下一章下标');
+      console.log(this.bookIndex, "下一章下标");
       this.bookIndex += 1;
       this.keii = false;
       this.uuid = this.catalog[this.bookIndex].uuid;
@@ -374,9 +384,9 @@ export default {
     // window.addEventListener("scroll", true);
   },
   // 离开阅读页面时保存对应小说章节
-  destroyed(){
- this.setid();
-}
+  destroyed() {
+    this.setid();
+  },
 };
 </script>
 

@@ -122,7 +122,7 @@
     data() {
       return {
         shujia: '加入书架',
-        yd: '立即阅读',
+        yd: '',
         show2: window.localStorage.getItem("uuid"),
         value: 5,
         show: false,
@@ -253,6 +253,9 @@
         console.log(1111555)
         if (window.localStorage.getItem(`uuid${this.sourceUuid}`)) {
           this.yd = '继续阅读'
+        }else{
+          this.yd = '立即阅读'
+
         }
         this.findAll(this.sourceUuid)
         // this.sourceUuid = rankFsssa

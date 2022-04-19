@@ -178,7 +178,6 @@ export default {
   },
   methods: {
     times() {
-     
       if (this.flag == true) {
         setTimeout(t);
       }
